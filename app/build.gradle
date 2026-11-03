@@ -1,0 +1,36 @@
+plugins { id "com.android.application" }
+
+// indirizzo della versione TV del tuo sito: lo scegli quando costruisci l'app (vedi GUIDA)
+def tvUrl = (project.findProperty("tvUrl") ?: "https://example.pages.dev/tv.html").toString()
+def ks = file("tonightly.jks")
+
+android {
+    namespace "app.tonightly.tv"
+    compileSdk 34
+    defaultConfig {
+        applicationId "app.tonightly.tv"
+        minSdk 21
+        targetSdk 34
+        versionCode((System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger())
+        versionName "1." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        buildConfigField "String", "TV_URL", "\"" + tvUrl.replace("\"", "") + "\""
+    }
+    buildFeatures { buildConfig true }
+    signingConfigs {
+        fixed {
+            if (ks.exists()) {
+                storeFile ks
+                storePassword System.getenv("KS_PASS") ?: "tonightly"
+                keyAlias "tonightly"
+                keyPassword System.getenv("KS_PASS") ?: "tonightly"
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig ks.exists() ? signingConfigs.fixed : signingConfigs.debug
+        }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
