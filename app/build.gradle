@@ -1,7 +1,9 @@
 plugins { id "com.android.application" }
 
 // indirizzo della versione TV del tuo sito: lo scegli quando costruisci l'app (vedi GUIDA)
-def tvUrl = (project.findProperty("tvUrl") ?: "https://example.pages.dev/tv.html").toString()
+def tvUrl = (project.findProperty("tvUrl") ?: "https://cinematch-6yr.pages.dev/tv.html").toString()
+// se hai scritto solo l'indirizzo del sito, aggiungo io /tv.html
+if (!(tvUrl ==~ '.*/tv(\\.html)?(\\?.*)?')) tvUrl = tvUrl.replaceAll('/+$', '') + '/tv.html'
 def ks = file("tonightly.jks")
 
 android {
@@ -14,6 +16,8 @@ android {
         versionCode((System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInteger())
         versionName "1." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
         buildConfigField "String", "TV_URL", "\"" + tvUrl.replace("\"", "") + "\""
+        // dove cercare gli aggiornamenti: il repository GitHub che costruisce l'app (es. niko/tonightly-tv)
+        buildConfigField "String", "UPDATE_REPO", "\"" + (System.getenv("GITHUB_REPOSITORY") ?: "").replace("\"", "") + "\""
     }
     buildFeatures { buildConfig true }
     signingConfigs {
