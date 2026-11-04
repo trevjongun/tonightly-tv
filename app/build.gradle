@@ -4,6 +4,10 @@ plugins { id "com.android.application" }
 def tvUrl = (project.findProperty("tvUrl") ?: "https://example.pages.dev/tv.html").toString()
 // se hai scritto solo l'indirizzo del sito, aggiungo io /tv.html
 if (!(tvUrl ==~ '.*/tv(\\.html)?(\\?.*)?')) tvUrl = tvUrl.replaceAll('/+$', '') + '/tv.html'
+// solo indirizzi https semplici: niente virgolette o caratteri strani dentro il codice dell'app
+if (!(tvUrl ==~ '^https://[A-Za-z0-9.-]+(:[0-9]{1,5})?(/[A-Za-z0-9._~/-]*)?(\\?[A-Za-z0-9._~=&%-]*)?$')) {
+    throw new GradleException("Indirizzo della TV non valido (deve iniziare con https:// e non contenere spazi o virgolette): " + tvUrl)
+}
 def ks = file("tonightly.jks")
 
 android {
@@ -32,7 +36,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // riduce e offusca il codice dell'APK (i metodi del ponte TonightlyTV restano, vedi proguard-rules.pro)
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig ks.exists() ? signingConfigs.fixed : signingConfigs.debug
         }
     }

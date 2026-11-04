@@ -1,0 +1,9 @@
+# Avvisa (con una pull request) quando escono aggiornamenti di sicurezza per le azioni di GitHub e per Gradle
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+  - package-ecosystem: gradle
+    directory: /
+    schedule: { interval: weekly }

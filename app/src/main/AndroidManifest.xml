@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- per installare gli aggiornamenti dell'app da dentro l'app -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <!-- per trovare e aprire Netflix, Prime Video, Disney+… installate sulla TV -->
@@ -15,7 +17,7 @@
         android:theme="@style/TvTheme"
         android:hardwareAccelerated="true"
         android:usesCleartextTraffic="false"
-        android:allowBackup="true">
+        android:allowBackup="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,5 +30,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- passa il file dell'aggiornamento all'installatore di Android -->
+        <provider
+            android:name=".ApkProvider"
+            android:authorities="app.tonightly.tv.apk"
+            android:exported="false"
+            android:grantUriPermissions="true" />
     </application>
 </manifest>

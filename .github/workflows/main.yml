@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -31,13 +33,20 @@ jobs:
       - name: Costruisco l'APK
         env:
           KS_PASS: ${{ secrets.KS_PASS }}
-        run: gradle assembleRelease -PtvUrl="${{ inputs.url }}" --no-daemon
-      - name: Rinomino
-        run: cp app/build/outputs/apk/release/app-release.apk tonightly-tv.apk
+          # l'indirizzo passa da una variabile, non dentro il comando: così non può iniettare comandi
+          TV_URL: ${{ inputs.url }}
+        run: gradle assembleRelease -PtvUrl="$TV_URL" --no-daemon
+      - name: Rinomino e calcolo l'impronta
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk tonightly-tv.apk
+          sha256sum tonightly-tv.apk | tee tonightly-tv.apk.sha256
+          rm -f app/tonightly.jks
       - name: Pubblico il file da scaricare sulla TV
         uses: softprops/action-gh-release@v2
         with:
           tag_name: tv-${{ github.run_number }}
           name: Tonightly TV ${{ github.run_number }}
           make_latest: true
-          files: tonightly-tv.apk
+          files: |
+            tonightly-tv.apk
+            tonightly-tv.apk.sha256
