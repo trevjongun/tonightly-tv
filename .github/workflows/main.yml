@@ -42,7 +42,7 @@ jobs:
           sha256sum tonightly-tv.apk | tee tonightly-tv.apk.sha256
           rm -f app/tonightly.jks
       - name: Pubblico il file da scaricare sulla TV
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: tv-${{ github.run_number }}
           name: Tonightly TV ${{ github.run_number }}
