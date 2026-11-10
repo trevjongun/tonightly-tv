@@ -5,3 +5,7 @@ local.properties
 .gradle/
 build/
 app/build/
+# sito: file generati
+node_modules/
+dist/
+test-results/

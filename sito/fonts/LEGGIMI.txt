@@ -1,0 +1,5 @@
+Font opzionale: Plus Jakarta Sans (licenza SIL OFL, uso libero).
+Metti qui i file WOFF2 con questi nomi:
+plus-jakarta-sans-400.woff2, -500, -600, -700, -800
+(si scaricano da fontsource.org o da Google Fonts -> "Download family").
+Se mancano, l'app usa il font di sistema e funziona uguale.
