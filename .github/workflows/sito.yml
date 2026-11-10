@@ -67,6 +67,15 @@ jobs:
       - name: Mancano i segreti di Cloudflare?
         if: env.CF_TOKEN == '' || env.CF_ACCOUNT == ''
         run: 'echo "::warning::Pubblicazione saltata, aggiungi i segreti CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID"'
+      - name: Controllo il token di Cloudflare
+        if: env.CF_TOKEN != '' && env.CF_ACCOUNT != ''
+        run: |
+          v=$(curl -s https://api.cloudflare.com/client/v4/user/tokens/verify -H "Authorization: Bearer $CF_TOKEN" | jq -c '{success, status: .result.status, errors: [.errors[]?.code]}')
+          echo "Token: $v"
+          a=$(curl -s https://api.cloudflare.com/client/v4/accounts -H "Authorization: Bearer $CF_TOKEN" | jq -c '{success, accounts: [.result[]? | (.id == env.CF_ACCOUNT)], errors: [.errors[]?.code]}')
+          echo "Account visibili (true = è quello dei segreti): $a"
+          p=$(curl -s "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects" -H "Authorization: Bearer $CF_TOKEN" | jq -c '{success, projects: [.result[]?.name], errors: [.errors[]? | {code, message}]}')
+          echo "Progetti Pages: $p"
       - name: Pubblico su Cloudflare Pages
         if: env.CF_TOKEN != '' && env.CF_ACCOUNT != ''
         uses: cloudflare/wrangler-action@v3
