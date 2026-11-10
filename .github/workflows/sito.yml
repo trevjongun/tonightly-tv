@@ -66,7 +66,7 @@ jobs:
           path: dist
       - name: Mancano i segreti di Cloudflare?
         if: env.CF_TOKEN == '' || env.CF_ACCOUNT == ''
-        run: echo "::warning::Pubblicazione saltata: aggiungi i segreti CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID"
+        run: 'echo "::warning::Pubblicazione saltata, aggiungi i segreti CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID"'
       - name: Pubblico su Cloudflare Pages
         if: env.CF_TOKEN != '' && env.CF_ACCOUNT != ''
         uses: cloudflare/wrangler-action@v3
