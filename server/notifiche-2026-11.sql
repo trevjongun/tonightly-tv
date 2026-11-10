@@ -13,7 +13,7 @@ create or replace function public.fn_call(fn text, payload jsonb) returns void l
 begin
   perform net.http_post(url := 'https://dhbydbyrmjdehquygrmc.supabase.co/functions/v1/' || fn,
     headers := jsonb_build_object('Content-Type','application/json','Authorization','Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret')),
-    body := payload);
+    body := payload, timeout_milliseconds := 60000);
 end $$;
 revoke all on function public.fn_call(text, jsonb) from public, anon, authenticated;
 
