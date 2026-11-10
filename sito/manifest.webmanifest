@@ -1,0 +1,94 @@
+{
+  "name": "Tonightly",
+  "short_name": "Tonightly",
+  "lang": "it",
+  "description": "Il catalogo unico dei tuoi abbonamenti: scopri cosa guardare stasera, tieni la lista e scegli con gli amici.",
+  "categories": [
+    "entertainment"
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#06070a",
+  "theme_color": "#06070a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Stasera",
+      "short_name": "Stasera",
+      "description": "Cosa guardiamo stasera?",
+      "url": "./?go=tonight",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "La mia lista",
+      "short_name": "Lista",
+      "url": "./?go=list",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Cerca",
+      "short_name": "Cerca",
+      "url": "./?go=search",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Amici",
+      "short_name": "Amici",
+      "url": "./?go=friends",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "id": "./",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "./manifest.webmanifest"
+    }
+  ],
+  "prefer_related_applications": false
+}

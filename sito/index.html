@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<script>/* sulla TV (app Tonightly TV, Android/Google TV, Fire TV, Samsung, LG…) si apre la versione TV */(function(){try{var u=navigator.userAgent||"";if(/TonightlyTV|Android TV|GoogleTV|\bAFT[A-Z]|BRAVIA|SMART-TV|SmartTV|Tizen|Web0S|webOS|HbbTV|CrKey/i.test(u)&&!/[?&]telefono/.test(location.search)){location.replace("tv.html")}}catch(e){}})();</script>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://image.tmdb.org https://*.supabase.co; connect-src 'self' https://api.themoviedb.org https://*.supabase.co wss://*.supabase.co; frame-src https://www.youtube-nocookie.com; media-src 'self' blob:; font-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#06070a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="description" content="Il catalogo unico dei tuoi abbonamenti: scopri cosa guardare stasera, tieni la lista e scegli con gli amici.">
+<meta property="og:title" content="Tonightly">
+<meta property="og:description" content="Cosa guardiamo stasera? Un solo posto per tutti i tuoi abbonamenti.">
+<meta property="og:image" content="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tonightly">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>App</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="v4.css">
+</head>
+<body data-view="home">
+<div id="glow"></div>
+<header>
+  <button class="logo h" onclick="go('home')" aria-label="Home"></button>
+  <div class="sbox">
+    <input id="q" type="search" placeholder="Cerca film e serie" autocomplete="off" enterkeyhint="search" oninput="qInput(this.value)" onfocus="openSearch()" onkeydown="srKey(event)" aria-label="Cerca">
+    <button class="fbtn" onclick="openFilters()" aria-label="Filtri"><svg class="i" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><i id="fc"></i></button>
+    <button id="scx" class="link" onclick="closeSearch()">Annulla</button>
+  </div>
+  <button id="who" onclick="go('prof')" aria-label="Profilo"></button>
+</header>
+<div id="srch"><div id="sr"></div></div>
+<main id="main"></main>
+<nav id="nav"></nav>
+<div id="sheet"></div><div id="amenu"></div><div id="rate"></div><div id="fsheet"></div>
+<div id="toast" role="status"></div>
+<script src="supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="reco.js"></script>
+<script src="extra.js"></script>
+<script src="more.js"></script>
+<script src="v2.js"></script>
+<script src="v3.js"></script>
+<script src="v4.js"></script>
+</body>
+</html>

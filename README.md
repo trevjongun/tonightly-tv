@@ -1,5 +1,18 @@
 # tonightly-tv
 
+Tonightly: il sito (app installabile per telefono e PC), la versione TV del sito e l'app Android TV.
+
+## Il sito (`sito/`)
+- Si modifica in `sito/`. A ogni modifica su `main`, GitHub › Actions › "Sito – prova e pubblica":
+  1. controlla che le classi CSS nuove non si scontrino con gli stili vecchi (`tools/check-classes.mjs`);
+  2. prepara la versione compattata in `dist/` (`tools/build.mjs`; la versione della cache dell'app si calcola da sola);
+  3. apre tutte le schermate su telefono, PC e TV con dati finti e si ferma se c'è un errore (`test/smoke.mjs`);
+  4. pubblica `dist/` su Cloudflare Pages.
+- Per la pubblicazione servono i segreti `CLOUDFLARE_API_TOKEN` (permesso "Cloudflare Pages: Edit") e `CLOUDFLARE_ACCOUNT_ID`. Se il progetto Pages non si chiama `cinematch`, imposta la variabile `CF_PAGES_PROJECT`.
+- In locale: `npm install`, poi `npm run controlla`, `npm run build`, `npm run prova`.
+- `server/`: database Supabase (`*.sql`) e funzioni (`supabase/functions`). Le chiavi delle notifiche stanno nel Vault di Supabase, mai qui.
+
+## App Android TV
 App Android TV di Tonightly: mostra la versione TV del sito (`tv.html`) a tutto schermo e apre le app dei servizi.
 
 - Codice: `app/src/main/` (l'unico che viene compilato).

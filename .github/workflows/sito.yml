@@ -1,0 +1,76 @@
+name: Sito – prova e pubblica
+
+# A ogni modifica del sito: controlla, prova tutte le schermate e, se va tutto bene, pubblica su Cloudflare Pages.
+# Per pubblicare servono due segreti del repository (Settings › Secrets and variables › Actions):
+#   CLOUDFLARE_API_TOKEN  – token con il permesso "Cloudflare Pages: Edit"
+#   CLOUDFLARE_ACCOUNT_ID – l'ID del tuo account Cloudflare
+# e, se il progetto Pages non si chiama "cinematch", la variabile CF_PAGES_PROJECT con il suo nome.
+# Senza i segreti le prove girano lo stesso e la pubblicazione viene saltata.
+on:
+  push:
+    branches: [main]
+    paths: ["sito/**", "tools/**", "test/**", "package.json", ".github/workflows/sito.yml"]
+  pull_request:
+    paths: ["sito/**", "tools/**", "test/**", "package.json", ".github/workflows/sito.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sito-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prova:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Strumenti
+        run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
+      - name: Nomi delle classi (niente scontri con gli stili vecchi)
+        run: node tools/check-classes.mjs
+      - name: Preparo la versione da pubblicare
+        run: node tools/build.mjs
+      - name: Provo tutte le schermate (telefono, PC, TV)
+        run: node test/smoke.mjs sito && node test/smoke.mjs dist
+      - name: Screenshot delle prove
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshot
+          path: test-results/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sito-pronto
+          path: dist/
+          retention-days: 7
+
+  pubblica:
+    needs: prova
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: sito-pronto
+          path: dist
+      - name: Mancano i segreti di Cloudflare?
+        if: env.CF_TOKEN == '' || env.CF_ACCOUNT == ''
+        run: echo "::warning::Pubblicazione saltata: aggiungi i segreti CLOUDFLARE_API_TOKEN e CLOUDFLARE_ACCOUNT_ID"
+      - name: Pubblico su Cloudflare Pages
+        if: env.CF_TOKEN != '' && env.CF_ACCOUNT != ''
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ vars.CF_PAGES_PROJECT || 'cinematch' }} --branch=main --commit-dirty=true
